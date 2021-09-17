@@ -1,0 +1,1 @@
+OLOO stands for Objects Linking Other Objects. It's an object design pattern.
