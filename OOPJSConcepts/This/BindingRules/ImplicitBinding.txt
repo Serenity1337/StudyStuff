@@ -1,0 +1,103 @@
+TL;DR-------------------------------------------------------------------------------------------------------------------------------------------
+
+(If you're interested to delve deeper, look below TL;DR)
+
+With implicit binding, as we just saw, we had to mutate the object in
+question to include a reference on itself to the function, and use this
+property function reference to indirectly (implicitly) bind this to the
+object, but there are a few catches(look above)
+
+TL;DR-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Another rule to consider is whether the call-site has a context object,
+also referred to as an owning or containing object, though these alter‐
+nate terms could be slightly misleading.
+
+Consider:
+
+function foo() {
+console.log( this.a );
+}
+var obj = {
+a: 2,
+foo: foo
+};
+obj.foo(); // 2
+
+First, notice the manner in which foo() is declared and then later
+added as a reference property onto obj. Regardless of whether foo()
+is initially declared on foo, or is added as a reference later (as this
+snippet shows), in neither case is the function really “owned” or “con‐
+tained” by the obj object.
+
+However, the call-site uses the obj context to reference the function,
+so you could say that the obj object “owns” or “contains” the function
+reference at the time the function is called.
+Whatever you choose to call this pattern, at the point that foo() is
+called, it’s preceeded by an object reference to obj. When there is a
+context object for a function reference, the implicit binding rule says
+that it’s that object that should be used for the function call’s this
+binding. Because obj is the this for the foo() call, this.a is synon‐
+ymous with obj.a.
+Only the top/last level of an object property reference chain matters
+to the call-site. For instance:
+
+function foo() {
+console.log( this.a );
+}
+var obj2 = {
+a: 42,
+foo: foo
+};
+var obj1 = {
+a: 2,
+obj2: obj2
+};
+obj1.obj2.foo(); // 42
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Implicitly lost:
+
+One of the most common frustrations that this binding creates is
+when an implicitly bound function loses that binding, which usually
+means it falls back to the default binding of either the global object or
+undefined, depending on strict mode.
+Consider:
+function foo() {
+console.log( this.a );
+}
+var obj = {
+a: 2,
+foo: foo
+};
+var bar = obj.foo; // function reference/alias!
+
+var a = "oops, global"; // `a` also property on global object
+bar(); // "oops, global"
+
+Even though bar appears to be a reference to obj.foo, in fact, it’s really
+just another reference to foo itself. Moreover, the call-site is what
+matters, and the call-site is bar(), which is a plain, undecorated call,
+and thus the default binding applies.
+
+
+
+The more subtle, more common, and more unexpected way this oc‐
+curs is when we consider passing a callback function:
+
+function foo() {
+console.log( this.a );
+}
+function doFoo(fn) {
+// `fn` is just another reference to `foo`
+fn(); // <-- call-site!
+}
+var obj = {
+a: 2,
+foo: foo
+};
+var a = "oops, global"; // `a` also property on global object
+doFoo( obj.foo ); // "oops, global"

@@ -1,0 +1,103 @@
+TL;DR ------------------------------------------------------------------------------------------------------------------------------------------
+
+(If you're interested to delve deeper, look below TL;DR)
+
+Now, we can summarize the rules for determining this from a func‐
+tion call’s call-site, in their order of precedence. Ask these questions
+in this order, and stop when the first rule applies.
+
+1. Is the function called with new (new binding)? If so, this is the
+newly constructed object.
+var bar = new foo()
+
+2. Is the function called with call or apply (explicit binding), even
+hidden inside a bind hard binding? If so, this is the explicitly
+specified object.
+var bar = foo.call( obj2 )
+
+3. Is the function called with a context (implicit binding), otherwise
+known as an owning or containing object? If so, this is that con‐
+text object.
+var bar = obj1.foo()
+
+4. Otherwise, default the this (default binding). If in strict mode,
+pick undefined, otherwise pick the global object.
+var bar = foo()
+
+TL;DR-------------------------------------------------------------------------------------------------------------------------------------------
+
+So, now we’ve uncovered the four rules for binding this in function
+calls. All you need to do is find the call-site and inspect it to see which
+rule applies. But, what if the call-site has multiple eligible rules? There
+must be an order of precedence to these rules, and so we will next
+demonstrate what order to apply the rules.
+It should be clear that the default binding is the lowest priority rule of
+the four. So we’ll just set that one aside.
+Which is more precedent, implicit binding or explicit binding? Let’s
+test it:
+function foo() {
+console.log( this.a );
+}
+var obj1 = {
+a: 2,
+foo: foo
+};
+var obj2 = {
+a: 3,
+foo: foo
+};
+
+obj1.foo(); // 2
+obj2.foo(); // 3
+obj1.foo.call( obj2 ); // 3
+obj2.foo.call( obj1 ); // 2
+So, explicit binding takes precedence over implicit binding, which
+means you should ask first if explicit binding applies before checking
+for implicit binding.
+
+Now, we just need to figure out where new binding fits in the
+precedence:
+function foo(something) {
+this.a = something;
+}
+var obj1 = {
+foo: foo
+};
+var obj2 = {};
+obj1.foo( 2 );
+console.log( obj1.a ); // 2
+obj1.foo.call( obj2, 3 );
+console.log( obj2.a ); // 3
+var bar = new obj1.foo( 4 );
+console.log( obj1.a ); // 2
+console.log( bar.a ); // 4
+OK, new binding is more precedent than implicit binding. But do you
+think new binding is more or less precedent than explicit binding?
+
+Before we explore that in a code listing, think back to how hard bind‐
+ing physically works, which is that Function.prototype.bind(..)
+creates a new wrapper function that is hardcoded to ignore its own
+this binding (whatever it may be), and use a manual one we provide.
+
+Everything in Order | 23
+
+By that reasoning, it would seem obvious to assume that hard bind‐
+ing (which is a form of explicit binding) is more precedent than new
+binding, and thus cannot be overridden with new.
+Let’s check:
+function foo(something) {
+this.a = something;
+}
+var obj1 = {};
+var bar = foo.bind( obj1 );
+bar( 2 );
+console.log( obj1.a ); // 2
+var baz = new bar( 3 );
+console.log( obj1.a ); // 2
+console.log( baz.a ); // 3
+Whoa! bar is hard-bound against obj1, but new bar(3) did not change
+obj1.a to 3 as we would have expected. Instead, the hard-bound (to
+obj1) call to bar(..) is able to be overridden with new. Since new was
+applied, we got the newly created object back, which we named baz,
+and we see in fact that baz.a has the value 3.
+

@@ -1,0 +1,73 @@
+TL;DR-------------------------------------------------------------------------------------------------------------------------------------------
+
+(If you're interested to delve deeper, look below TL;DR)
+
+Explicit binding uses .call or .bind to force call a function with a specific object. Bind is hard binding, which means it doesnt matter where it gets called
+
+TL;DR-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+With implicit binding, as we just saw, we had to mutate the object in
+question to include a reference on itself to the function, and use this
+property function reference to indirectly (implicitly) bind this to the
+object.
+
+But, what if you want to force a function call to use a particular object
+for the this binding, without putting a property function reference
+on the object?
+
+“All” functions in the language have some utilities available to them
+(via their [[Prototype]]—more on that later), which can be useful
+for this task. Specifically, functions have call(..) and apply(..)
+methods. Technically, JavaScript host environments sometimes pro‐
+vide functions that are special enough (a kind way of putting it!) that
+they do not have such functionality. But those are few. The vast ma‐
+jority of functions provided, and certainly all functions you will create,
+do have access to call(..) and apply(..).
+How do these utilities work? They both take, as their first parameter,
+an object to use for the this, and then invoke the function with that
+this specified. Since you are directly stating what you want the this
+to be, we call it explicit binding.
+
+Consider:
+
+function foo() {
+console.log( this.a );
+}
+var obj = {
+a: 2
+};
+foo.call( obj ); // 2
+
+Invoking foo with explicit binding by foo.call(..) allows us to force
+its this to be obj.
+If you pass a simple primitive value (of type string, boolean, or num
+
+ber) as the this binding, the primitive value is wrapped in its object-
+form (new String(..), new Boolean(..), or new Number(..), re‐
+
+spectively). This is often referred to as “boxing.”
+
+Unfortunately, explicit binding alone still doesn’t offer any solution to
+the issue mentioned previously, of a function “losing” its intended
+this binding, or just having it paved over by a framework, etc.
+
+Hard binding
+But a variation pattern around explicit binding actually does the trick.
+Consider:
+
+function foo() {
+console.log( this.a );
+}
+var obj = {
+a: 2
+};
+var bar = function() {
+foo.call( obj );
+
+};
+bar(); // 2
+setTimeout( bar, 100 ); // 2
+// hard-bound `bar` can no longer have its `this` overridden
+bar.call( window ); // 2
