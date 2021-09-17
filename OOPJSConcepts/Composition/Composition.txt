@@ -1,0 +1,7 @@
+A common composition pattern in JavaScript is using object composition. It combines the power of objects and functional programming. It solves the issue of inheriting various methods, which are being shared with each other.
+
+For more info sources:
+
+https://alligator.io/js/class-composition/
+
+https://www.youtube.com/watch?v=nnwD5Lwwqdo
