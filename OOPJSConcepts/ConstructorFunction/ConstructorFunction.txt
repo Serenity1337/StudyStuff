@@ -1,0 +1,3 @@
+TL;DR : A constructor is a function that creates an instance of a class which is typically called an “object”. In JavaScript, a constructor gets called when you declare an object using the new keyword.
+
+For more info source: https://www.youtube.com/watch?v=23AOrSN-wmI
