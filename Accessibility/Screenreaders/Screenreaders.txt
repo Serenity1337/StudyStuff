@@ -1,0 +1,9 @@
+Screen reader is a tool that reads your screen. Necessary for blind people, important for partially-sighted users and helpful for people with reading disorders.
+
+How to improve your website's experience for screen readers:
+
+1) Use aria-labels, if you have more than one type of element.
+
+2) Write more precise information on names. For example, if an input requires you to enter zip code, label it as 'Enter zip code'
+
+3) Do not use hidden elements to describe the title of your webpage, since there is a <title> element already.
