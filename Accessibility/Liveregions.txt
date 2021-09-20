@@ -1,0 +1,10 @@
+An ARIA live region is a simple mechanism for notifying screen readers when content is updated on the page. Despite the obvious Accessible User Experience (AUX) benefits that live regions bring, screen reader support is disappointingly inconsistent.
+
+To recap: A screen reader can only focus on one part of
+the page at a time. If something changes elsewhere on the page, there’s a good chance a screen reader user will be oblivious to it. When the update takes place within an ARIA live region, a screen reader is automatically notified (wherever its focus is at the time), and it conveys the updated content to the user.
+
+The aria-live attribute identifies an element as a live region. It takes three possible values:
+
+1) Off (no notification).
+2) Polite (screen reader notifies user once current task is complete).
+3) Assertive (screen reader interrupts current task to notify user)

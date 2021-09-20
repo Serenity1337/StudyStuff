@@ -1,0 +1,15 @@
+There are eight landmark roles, which are used to represent a block of content that occurs on a web page:
+
+1) role=”banner”
+2) role=”navigation” (e.g., a menu)
+3) role=”main” (the main content of the page)
+4) role=”complementary” (e.g., a sidebar)
+5)role=”contentinfo” (meta data about the page, e.g., a copyright statement)
+6) role=”search”
+7) role=”form”
+8) role=”application” (a web application with its own keyboard interface)
+
+For example:
+
+<div role=”navigation” aria-label=”Main menu”>
+<div role=”navigation” aria-label=”User menu”>
