@@ -1,0 +1,19 @@
+TL;DR 
+
+WAI-ARIA, the Accessible Rich Internet Applications Suite, defines a way to make Web content and Web applications more accessible to people with disabilities. It especially helps with dynamic content and advanced user interface controls developed with HTML, JavaScript, and related technologies.
+
+For more information look below TL;DR or source: https://www.w3.org/WAI/standards-guidelines/aria/
+
+TL;DR
+
+WAI-ARIA provides with the following: 
+
+1) Roles to describe the type of widget such as 'menu', 'slider', 'progressbar' etc.
+
+2) Roles to describe the structure of the web, for example: headings, tables, regions etc.
+
+3) Properties to describe the state widgets are in, such as 'checked' for a checkbox or 'haspopup' for a menu.
+
+4) Properties to define live regions of a page that are likely to get updates( such as stock quotes), as well as an interruption policy for those updates, for example, critical updates may be presented in an alert dialog box.
+
+5) A way to provide keyboard navigation for the web objects or widgets.
